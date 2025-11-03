@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .info-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+        }
+        .info-box h3 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        .info-box ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .info-box li {
+            margin: 5px 0;
+        }
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+        .btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #667eea;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+        .btn-secondary {
+            background-color: #764ba2;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #653a8b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(118, 75, 162, 0.3);
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        .feature-card {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        .feature-card h4 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        .feature-card p {
+            color: #666;
+            margin: 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💼 Employee Management System</h1>
+        <p class="subtitle">Part b - JDBC and Servlet Integration</p>
+        
+        <div class="info-box">
+            <h3>About This Application</h3>
+            <p>This Employee Management System demonstrates the integration of Java Servlets with JDBC to manage employee records. The application provides a dynamic interface for viewing and searching employee information stored in a MySQL database.</p>
+        </div>
+        
+        <div class="features">
+            <div class="feature-card">
+                <h4>📊 View All Employees</h4>
+                <p>Display a comprehensive list of all employees with their ID, name, and salary information in a well-formatted table.</p>
+            </div>
+            <div class="feature-card">
+                <h4>🔍 Search by ID</h4>
+                <p>Search for specific employee records using their unique Employee ID. Quick and efficient data retrieval.</p>
+            </div>
+            <div class="feature-card">
+                <h4>📦 JDBC Integration</h4>
+                <p>Backend powered by JDBC for seamless database connectivity and SQL query execution.</p>
+            </div>
+            <div class="feature-card">
+                <h4>🎨 Dynamic HTML</h4>
+                <p>Servlet generates dynamic HTML content based on database queries and user interactions.</p>
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <h3>Features</h3>
+            <ul>
+                <li>View all employee records in a formatted HTML table</li>
+                <li>Search for employees by their ID</li>
+                <li>Responsive and user-friendly interface</li>
+                <li>Real-time database integration using JDBC</li>
+                <li>Error handling for invalid searches</li>
+            </ul>
+        </div>
+        
+        <div class="button-group">
+            <a href="EmployeeServlet" class="btn btn-primary">📊 View All Employees</a>
+            <a href="index.html" class="btn btn-secondary">🏠 Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>
