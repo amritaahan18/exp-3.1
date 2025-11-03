@@ -1,6 +1,7 @@
 # User Login Servlet Application - Setup Instructions
 
 ## Experiment 3.1: Web Applications Using Servlets and JSP
+
 ### Part A: User Login Using Servlet and HTML Form
 
 ---
@@ -17,183 +18,350 @@ This project demonstrates a simple user authentication system using Java Servlet
 exp-3.1/
 ├── WEB-INF/
 │   └── web.xml                 # Web application deployment descriptor
+├── sql/
+│   ├── employee_table.sql      # SQL script for Employee table (Part b)
+│   └── attendance_table.sql    # SQL script for Attendance table (Part c)
 ├── src/
-│   └── LoginServlet.java       # Java Servlet for handling authentication
-├── login.html                  # HTML login form
+│   ├── LoginServlet.java       # Java Servlet for handling authentication (Part a)
+│   ├── EmployeeServlet.java    # Java Servlet for employee management (Part b)
+│   └── AttendanceServlet.java  # Java Servlet for attendance submission (Part c)
+├── login.html                  # HTML login form (Part a)
+├── employee.html               # Employee management landing page (Part b)
+├── attendance.jsp              # Attendance form JSP (Part c)
 └── README.md                   # Project documentation
 ```
 
 ---
 
-## Features
-
-1. **HTML Login Form**: A styled login page that accepts username and password
-2. **Servlet Processing**: LoginServlet validates credentials and generates dynamic responses
-3. **Credential Validation**: Hardcoded username and password validation
-4. **Dynamic Response**: Personalized welcome message on success, error message on failure
-5. **Session Management**: Basic session configuration
-
----
-
 ## Prerequisites
 
-Before running this application, ensure you have the following installed:
-
 - **Java Development Kit (JDK)**: Version 8 or higher
-- **Apache Tomcat**: Version 8.5 or higher (or any other Servlet container)
-- **Text Editor/IDE**: Eclipse, IntelliJ IDEA, NetBeans, or VS Code
+- **Apache Tomcat**: Version 9.0 or higher
+- **MySQL Database**: Version 5.7 or higher
+- **MySQL JDBC Driver**: mysql-connector-java-8.x.jar
+- **IDE**: Eclipse, IntelliJ IDEA, or any Java IDE (Optional)
+- **Web Browser**: Any modern web browser
 
 ---
 
-## Default Credentials
+## Database Setup
 
-The application uses the following hardcoded credentials:
+### 1. Create Database
 
-- **Username**: `admin`
-- **Password**: `password123`
+```sql
+CREATE DATABASE employeedb;
+USE employeedb;
+```
 
----
+### 2. Run SQL Scripts
 
-## Setup and Deployment Instructions
+#### For Part b (Employee Management):
+```bash
+mysql -u root -p employeedb < sql/employee_table.sql
+```
 
-### Option 1: Using Apache Tomcat
+#### For Part c (Attendance Portal):
+```bash
+mysql -u root -p employeedb < sql/attendance_table.sql
+```
 
-#### Step 1: Download and Install Tomcat
-1. Download Apache Tomcat from [https://tomcat.apache.org/](https://tomcat.apache.org/)
-2. Extract the downloaded archive to a directory (e.g., `C:\tomcat` or `/opt/tomcat`)
-3. Set the `CATALINA_HOME` environment variable to the Tomcat directory
+### 3. Verify Tables
 
-#### Step 2: Prepare the Application
-
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/amritaahan18/exp-3.1.git
-   cd exp-3.1
-   ```
-
-2. Compile the servlet:
-   ```bash
-   javac -cp "path/to/tomcat/lib/servlet-api.jar" src/LoginServlet.java
-   ```
-
-3. Create the WAR directory structure:
-   ```
-   exp-3.1-app/
-   ├── WEB-INF/
-   │   ├── web.xml
-   │   └── classes/
-   │       └── LoginServlet.class
-   └── login.html
-   ```
-
-4. Copy the compiled class:
-   ```bash
-   mkdir -p exp-3.1-app/WEB-INF/classes
-   cp src/LoginServlet.class exp-3.1-app/WEB-INF/classes/
-   cp WEB-INF/web.xml exp-3.1-app/WEB-INF/
-   cp login.html exp-3.1-app/
-   ```
-
-#### Step 3: Deploy to Tomcat
-
-1. Copy the `exp-3.1-app` folder to Tomcat's `webapps` directory:
-   ```bash
-   cp -r exp-3.1-app $CATALINA_HOME/webapps/
-   ```
-
-2. Start Tomcat:
-   - **Windows**: Run `bin\startup.bat`
-   - **Linux/Mac**: Run `bin/startup.sh`
-
-3. Access the application:
-   - Open your browser and navigate to: `http://localhost:8080/exp-3.1-app/login.html`
+```sql
+USE employeedb;
+SHOW TABLES;
+SELECT * FROM Employee;
+SELECT * FROM Attendance;
+```
 
 ---
 
-## How to Use
+## Setup Instructions
 
-1. **Open the Login Page**: Navigate to `http://localhost:8080/exp-3.1-app/login.html`
+### Step 1: Install Apache Tomcat
 
-2. **Enter Credentials**:
+1. Download Apache Tomcat from [official website](https://tomcat.apache.org/)
+2. Extract to a directory (e.g., `C:\apache-tomcat-9.0.xx`)
+3. Set `CATALINA_HOME` environment variable to Tomcat directory
+4. Add MySQL JDBC driver to `CATALINA_HOME/lib/` directory
+
+### Step 2: Compile Java Servlets
+
+```bash
+# Navigate to the src directory
+cd src/
+
+# Compile all servlets
+javac -cp "path/to/tomcat/lib/servlet-api.jar;path/to/mysql-connector-java.jar" *.java
+```
+
+### Step 3: Deploy Application
+
+#### Option A: Using WAR file
+
+1. Create WAR structure:
+```
+exp-3-1.war/
+├── WEB-INF/
+│   ├── web.xml
+│   └── classes/
+│       ├── LoginServlet.class
+│       ├── EmployeeServlet.class
+│       └── AttendanceServlet.class
+├── login.html
+├── employee.html
+└── attendance.jsp
+```
+
+2. Copy WAR file to `CATALINA_HOME/webapps/`
+
+#### Option B: Manual deployment
+
+1. Copy all files to `CATALINA_HOME/webapps/exp-3-1/`
+2. Copy compiled `.class` files to `webapps/exp-3-1/WEB-INF/classes/`
+
+### Step 4: Configure Database Connection
+
+Edit the database credentials in the servlet files:
+
+**In EmployeeServlet.java and AttendanceServlet.java:**
+```java
+private static final String DB_URL = "jdbc:mysql://localhost:3306/employeedb";
+private static final String DB_USER = "root";
+private static final String DB_PASSWORD = "your_password";
+```
+
+Recompile after making changes.
+
+### Step 5: Start Tomcat Server
+
+**Windows:**
+```bash
+CATALINA_HOME\bin\startup.bat
+```
+
+**Linux/Mac:**
+```bash
+$CATALINA_HOME/bin/startup.sh
+```
+
+---
+
+## Testing the Application
+
+### Part A: User Login
+
+1. Open browser and navigate to:
+   ```
+   http://localhost:8080/exp-3-1/login.html
+   ```
+
+2. Test with credentials:
    - Username: `admin`
    - Password: `password123`
 
-3. **Submit the Form**: Click the "Login" button
+3. Expected results:
+   - Valid credentials: Success message
+   - Invalid credentials: Error message
 
-4. **View Results**:
-   - **Success**: You'll see a welcome message with your username
-   - **Failure**: You'll see an error message with a link to try again
+### Part B: Employee Management System
 
----
+1. **Access Landing Page:**
+   ```
+   http://localhost:8080/exp-3-1/employee.html
+   ```
 
-## Code Explanation
+2. **View All Employees:**
+   - Click "View All Employees" button
+   - URL: `http://localhost:8080/exp-3-1/EmployeeServlet`
+   - Displays all employees in an HTML table
 
-### 1. login.html
-- Creates an HTML form with username and password fields
-- Uses POST method to send data to LoginServlet
-- Includes CSS styling for a modern appearance
+3. **Search Employee by ID:**
+   - Enter Employee ID in the search form
+   - Click "Search" button
+   - View specific employee details
 
-### 2. LoginServlet.java
-- Extends `HttpServlet` to handle HTTP requests
-- Uses `@WebServlet` annotation to map to `/LoginServlet` URL
-- Implements `doPost()` method to:
-  - Retrieve username and password using `request.getParameter()`
-  - Validate credentials against hardcoded values
-  - Generate dynamic HTML response using `PrintWriter`
-  - Display success or error messages
+4. **Test Cases:**
+   - Search for Employee ID: 1, 2, 3, 4, 5 (sample data)
+   - Try invalid ID to test error handling
 
-### 3. web.xml
-- Defines servlet configuration and mapping
-- Sets login.html as the welcome file
-- Configures session timeout (30 minutes)
+### Part C: Student Attendance Portal
 
----
+1. **Access Attendance Form:**
+   ```
+   http://localhost:8080/exp-3-1/attendance.jsp
+   ```
 
-## Key Concepts Demonstrated
+2. **Submit Attendance:**
+   - Enter Student ID (e.g., S001, S002)
+   - Select Date (cannot be future date)
+   - Choose Status (Present, Absent, Late, Excused)
+   - Click "Submit Attendance"
 
-1. **Form Handling**: HTML form submission using POST method
-2. **Request Parameters**: Retrieving form data using `request.getParameter()`
-3. **Servlet Lifecycle**: Understanding doPost() and doGet() methods
-4. **Response Generation**: Creating dynamic HTML content using PrintWriter
-5. **Servlet Mapping**: Configuring URL patterns in web.xml
-6. **Credential Validation**: Basic authentication logic
+3. **Expected Results:**
+   - Success: Confirmation page with submitted details
+   - Error: Appropriate error messages for invalid input
+
+4. **Test Cases:**
+   - Valid submission: All fields filled correctly
+   - Invalid submission: Missing fields
+   - Database error: Incorrect database configuration
 
 ---
 
 ## Troubleshooting
 
-### Issue 1: 404 Error - Servlet Not Found
-**Solution**: 
-- Verify that LoginServlet.class is in `WEB-INF/classes/` directory
-- Check that web.xml has correct servlet mapping
-- Restart Tomcat after making changes
+### Common Issues
 
-### Issue 2: Compilation Errors
-**Solution**:
-- Ensure servlet-api.jar is in the classpath
-- Check Java version compatibility
-- Verify all import statements are correct
+1. **Port 8080 already in use:**
+   - Change Tomcat port in `CATALINA_HOME/conf/server.xml`
+   - Look for `<Connector port="8080"...` and change to another port
 
-### Issue 3: Form Not Submitting
-**Solution**:
-- Check that the form action matches the servlet URL pattern
-- Verify method is set to "post"
-- Ensure required fields are marked correctly
+2. **404 Error:**
+   - Verify application deployment in `webapps` directory
+   - Check Tomcat logs in `CATALINA_HOME/logs/`
+   - Ensure correct URL path
+
+3. **ClassNotFoundException for MySQL Driver:**
+   - Add `mysql-connector-java.jar` to `CATALINA_HOME/lib/`
+   - Restart Tomcat server
+
+4. **Database Connection Failed:**
+   - Verify MySQL service is running
+   - Check database credentials in servlet code
+   - Ensure database and tables exist
+   - Verify JDBC URL format
+
+5. **Servlet Not Found:**
+   - Check `web.xml` configuration
+   - Verify servlet URL mapping
+   - Ensure `.class` files are in correct location
+
+6. **Form Data Not Received:**
+   - Check form `action` attribute matches servlet mapping
+   - Verify form `method` is correct (GET/POST)
+   - Check input field `name` attributes
 
 ---
 
-## Enhancements and Extensions
+## Project Features
+
+### Part A: User Login (Servlet + HTML)
+- Simple authentication system
+- Form-based login
+- Hardcoded credential validation
+- Success/error message display
+
+### Part B: Employee Management (Servlet + JDBC)
+- Display all employees in HTML table
+- Search employees by ID
+- JDBC database integration
+- Dynamic HTML generation
+- Real-time data retrieval
+- Error handling for invalid searches
+
+### Part C: Student Attendance Portal (JSP + Servlet + JDBC)
+- JSP-based attendance form
+- Form data validation
+- Servlet backend processing
+- Database insertion using JDBC
+- Success/error page display
+- Date validation (no future dates)
+- Multiple status options
+
+---
+
+## Technologies Used
+
+- **Java Servlets**: Backend logic and request handling
+- **JSP (JavaServer Pages)**: Dynamic view layer for Part c
+- **JDBC**: Database connectivity
+- **MySQL**: Data storage
+- **HTML/CSS**: User interface
+- **Apache Tomcat**: Web server and servlet container
+- **HTTP Protocol**: Client-server communication
+
+---
+
+## Deployment Configuration
+
+### web.xml Configuration
+
+The `web.xml` file includes servlet mappings for all three parts:
+
+```xml
+<!-- Part A: Login Servlet -->
+<servlet>
+    <servlet-name>LoginServlet</servlet-name>
+    <servlet-class>LoginServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>LoginServlet</servlet-name>
+    <url-pattern>/LoginServlet</url-pattern>
+</servlet-mapping>
+
+<!-- Part B: Employee Servlet -->
+<servlet>
+    <servlet-name>EmployeeServlet</servlet-name>
+    <servlet-class>EmployeeServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>EmployeeServlet</servlet-name>
+    <url-pattern>/EmployeeServlet</url-pattern>
+</servlet-mapping>
+
+<!-- Part C: Attendance Servlet -->
+<servlet>
+    <servlet-name>AttendanceServlet</servlet-name>
+    <servlet-class>AttendanceServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>AttendanceServlet</servlet-name>
+    <url-pattern>/AttendanceServlet</url-pattern>
+</servlet-mapping>
+```
+
+---
+
+## Usage Examples
+
+### Part B: Employee Management
+
+**View All Employees:**
+- Direct URL: `http://localhost:8080/exp-3-1/EmployeeServlet`
+- Via Landing Page: Click button on `employee.html`
+
+**Search by ID:**
+- URL: `http://localhost:8080/exp-3-1/EmployeeServlet?empId=1`
+- Via Form: Enter ID in search box and submit
+
+### Part C: Attendance Submission
+
+**Submit Form:**
+- Access: `http://localhost:8080/exp-3-1/attendance.jsp`
+- Fill all required fields
+- Click "Submit Attendance"
+- Redirects to `AttendanceServlet` (POST request)
+- Displays success or error page
+
+---
+
+## Future Enhancements
 
 This basic implementation can be extended with:
 
-1. **Database Integration**: Store and validate credentials from a database
+1. **Database Integration for Part A**: Store and validate login credentials from database
 2. **Password Encryption**: Hash passwords using SHA-256 or bcrypt
 3. **Session Management**: Track logged-in users across pages
-4. **Multiple Users**: Support for multiple user accounts
-5. **JSP Integration**: Use JSP for view layer instead of generating HTML in servlet
-6. **Error Handling**: More robust exception handling
-7. **Input Validation**: Client-side and server-side input validation
-8. **HTTPS**: Secure communication using SSL/TLS
+4. **Employee CRUD Operations**: Add Create, Update, Delete functionality
+5. **Attendance Report Generation**: View and export attendance reports
+6. **User Roles and Permissions**: Implement role-based access control
+7. **Error Logging**: Comprehensive logging system
+8. **Input Validation**: Enhanced client-side and server-side validation
+9. **HTTPS**: Secure communication using SSL/TLS
+10. **RESTful API**: Convert to REST API architecture
+11. **Frontend Framework**: Integrate with React/Angular/Vue.js
+12. **Connection Pooling**: Optimize database connections
 
 ---
 
@@ -207,6 +375,12 @@ After completing this experiment, you should understand:
 - How to configure web applications using web.xml
 - Basic authentication and validation techniques
 - Servlet-to-HTML communication patterns
+- **JDBC integration with servlets**
+- **Dynamic HTML generation from database queries**
+- **JSP usage for view layer**
+- **Form data processing and validation**
+- **Database CRUD operations**
+- **Error handling in web applications**
 
 ---
 
@@ -215,6 +389,9 @@ After completing this experiment, you should understand:
 - [Java Servlet Specification](https://jakarta.ee/specifications/servlet/)
 - [Apache Tomcat Documentation](https://tomcat.apache.org/tomcat-9.0-doc/)
 - [Oracle Java EE Tutorial](https://docs.oracle.com/javaee/7/tutorial/)
+- [JDBC Tutorial](https://docs.oracle.com/javase/tutorial/jdbc/)
+- [JSP Tutorial](https://docs.oracle.com/javaee/5/tutorial/doc/bnagx.html)
+- [MySQL Documentation](https://dev.mysql.com/doc/)
 
 ---
 
@@ -228,4 +405,4 @@ This project is created for educational purposes as part of Experiment 3.1.
 
 ---
 
-**Note**: This is a demonstration project. In production environments, always use secure authentication methods, HTTPS, password hashing, and proper security measures.
+**Note**: This is a demonstration project. In production environments, always use secure authentication methods, HTTPS, password hashing, prepared statements (to prevent SQL injection), connection pooling, and proper security measures.
